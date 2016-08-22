@@ -9,10 +9,9 @@ import javax.management.NotificationEmitter;
 import javax.management.Notification;
 import java.lang.management.MemoryType;
 
-// import com.ibm.lang.management.*;
-
 class Agent {
     private static boolean init;
+    private static int threshold;
     public static String [] dumpOptions;
 
     // Agent command line args: -javaagent:gcDumpAgent.jar="-t 80 -d java,system"
@@ -30,11 +29,10 @@ class Agent {
         String arguments = args;
         String [] tokens = arguments.split("-");
         for(String token : tokens) {
-            // System.out.println("token: " + token);
             if(token.length() > 0) {
                 switch(token.charAt(0)) {
                     case 't':
-                        String threshold = token.substring(2, token.length());
+                        threshold = Integer.parseInt(token.substring(2, token.trim().length()));
                         break;
                     case 'd':
                         String dumpOption = token.substring(2, token.length());
@@ -55,7 +53,7 @@ class Agent {
         for(MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans()) {
             if (pool.getType() == MemoryType.HEAP && pool.isUsageThresholdSupported()) {
                 long maxMemory = pool.getUsage().getMax();
-                long warningThreshold = (long) (maxMemory * 0.3);
+                long warningThreshold = (long) (maxMemory * ((double) threshold/100) );
                 System.out.println("MaxMemory: " + maxMemory + ", WarningThreshold: " + warningThreshold);
 
                 pool.setUsageThreshold(warningThreshold);
