@@ -13,9 +13,11 @@ import java.lang.management.MemoryType;
 
 class Agent {
     private static boolean init;
+    public static String [] dumpOptions;
 
+    // Agent command line args: -javaagent:gcDumpAgent.jar="-t 80 -d java,system"
     public static void premain(String args, Instrumentation instrumentation) {
-        System.out.println("Agent Pre-Main, Args: " + args);
+        parseCommandLineArgs(args.trim());        
 
         MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
         NotificationEmitter emitter = (NotificationEmitter) mbean;
@@ -24,14 +26,34 @@ class Agent {
         init();
     }
 
+    private static void parseCommandLineArgs(String args) {
+        String arguments = args;
+        String [] tokens = arguments.split("-");
+        for(String token : tokens) {
+            // System.out.println("token: " + token);
+            if(token.length() > 0) {
+                switch(token.charAt(0)) {
+                    case 't':
+                        String threshold = token.substring(2, token.length());
+                        break;
+                    case 'd':
+                        String dumpOption = token.substring(2, token.length());
+                        dumpOptions = dumpOption.split(",");
+                        break;
+                    default:
+                        // TODO: Nothing to do here. Handle error if required
+                        break;
+                }
+            }
+        }
+    }
+
     public synchronized static void init() {        
         if(init) 
             return;
 
         for(MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans()) {
             if (pool.getType() == MemoryType.HEAP && pool.isUsageThresholdSupported()) {
-                System.out.println("Pool name: " + pool.getName() + ", Pool type: " + pool.getType());
-                
                 long maxMemory = pool.getUsage().getMax();
                 long warningThreshold = (long) (maxMemory * 0.3);
                 System.out.println("MaxMemory: " + maxMemory + ", WarningThreshold: " + warningThreshold);
