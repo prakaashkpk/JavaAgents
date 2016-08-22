@@ -23,13 +23,13 @@ class MyListener implements javax.management.NotificationListener {
             for(String agent : Agent.dumpOptions) {
                 if(agent.toLowerCase().contentEquals("system")) {
                     System.out.println("Generating SystemDump...");
-                    com.ibm.jvm.SystemDump();
+                    com.ibm.jvm.Dump.SystemDump();
                 } else if(agent.toLowerCase().contentEquals("java")) {
                     System.out.println("Generating JavaDump...");
-                    com.ibm.jvm.JavaDump();
+                    com.ibm.jvm.Dump.JavaDump();
                 } else if(agent.toLowerCase().contentEquals("heap")) {
                     System.out.println("Generating HeapDump...");
-                    com.ibm.jvm.HeapDump();
+                    com.ibm.jvm.Dump.HeapDump();
                 } else {
                     System.err.println("Invalid Agent configured");
                 }
