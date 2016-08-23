@@ -1,2 +1,3 @@
 *.class
 gcDumpAgent.jar
+.ftpconfig

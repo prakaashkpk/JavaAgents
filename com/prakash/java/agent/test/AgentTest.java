@@ -16,9 +16,12 @@ class AgentTest {
 
     public void start() {
         List < Person > list = new ArrayList < Person > ();
-        for (int i = 0; i <= 9999999; i++) {
-        Person per = new Person("John", "Mchlaren");
-            list.add(per);
+        for (int i = 0; i <= 9999; i++) {
+          for(int j=0; j<=5999999; j++) {
+            Person per = new Person("John", "Mchlaren");
+                list.add(per);
+          }
+          list.clear();
         }
     }
 

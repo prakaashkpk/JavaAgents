@@ -13,10 +13,12 @@ class Agent {
     private static boolean init;
     private static int threshold;
     public static String [] dumpOptions;
+    public static int start = 0;
+    public static int end = Integer.MAX_VALUE;
 
-    // Agent command line args: -javaagent:gcDumpAgent.jar="-t 80 -d java,system"
+    // Agent command line args: -javaagent:gcDumpAgent.jar="-t 80 -d java,system -r start..end"
     public static void premain(String args, Instrumentation instrumentation) {
-        parseCommandLineArgs(args.trim());        
+        parseCommandLineArgs(args.trim());
 
         MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
         NotificationEmitter emitter = (NotificationEmitter) mbean;
@@ -36,8 +38,22 @@ class Agent {
                         break;
                     case 'd':
                         String dumpOption = token.substring(2, token.length());
-                        dumpOptions = dumpOption.split(",");
+                        dumpOptions = dumpOption.trim().split(",");
+                        System.out.println("dump options" + dumpOptions[0]);
                         break;
+		    case 'r':
+			String[] rangeStr = token.substring(2).split("\\.\\.");
+      System.out.println("range options" + rangeStr[0] + "&" + rangeStr[1]);
+			switch(rangeStr.length)
+			{
+			    case 2:
+				end = Integer.parseInt(rangeStr[1]);
+			    case 1:
+				start = Integer.parseInt(rangeStr[0]);
+				break;
+			    default:
+				System.err.println("-r option is invalid");
+			}
                     default:
                         // TODO: Nothing to do here. Handle error if required
                         break;
@@ -46,8 +62,8 @@ class Agent {
         }
     }
 
-    public synchronized static void init() {        
-        if(init) 
+    public synchronized static void init() {
+        if(init)
             return;
 
         for(MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans()) {
