@@ -54,7 +54,7 @@ class Agent {
             if (pool.getType() == MemoryType.HEAP && pool.isUsageThresholdSupported()) {
                 long maxMemory = pool.getUsage().getMax();
                 long warningThreshold = (long) (maxMemory * ((double) threshold/100) );
-                System.out.println("MaxMemory: " + maxMemory + ", WarningThreshold: " + warningThreshold);
+                System.out.println("MaxMemory: " + maxMemory + " bytes, WarningThreshold: " + warningThreshold + " bytes");
 
                 pool.setUsageThreshold(warningThreshold);
             }
