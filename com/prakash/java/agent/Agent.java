@@ -39,23 +39,21 @@ class Agent {
                     case 'd':
                         String dumpOption = token.substring(2, token.length());
                         dumpOptions = dumpOption.trim().split(",");
-                        System.out.println("dump options" + dumpOptions[0]);
                         break;
-		    case 'r':
-			String[] rangeStr = token.substring(2).split("\\.\\.");
-      System.out.println("range options" + rangeStr[0] + "&" + rangeStr[1]);
-			switch(rangeStr.length)
-			{
-			    case 2:
-				end = Integer.parseInt(rangeStr[1]);
-			    case 1:
-				start = Integer.parseInt(rangeStr[0]);
-				break;
-			    default:
-				System.err.println("-r option is invalid");
-			}
-                    default:
-                        // TODO: Nothing to do here. Handle error if required
+                    case 'r':
+                        String[] rangeStr = token.substring(2).split("\\.\\.");
+                        switch(rangeStr.length)
+                        {
+                            case 2:
+                                end = Integer.parseInt(rangeStr[1]);
+                            case 1:
+                                start = Integer.parseInt(rangeStr[0]);
+                                break;
+                            default:
+                                System.err.println("-r option is invalid");
+                                break;
+                        }
+                    default: // TODO: Nothing to do here. Handle error if required
                         break;
                 }
             }

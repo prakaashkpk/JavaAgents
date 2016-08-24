@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 # TODO: Add configuration to set the SDK_PATH
 
 echo ">> Cleaning existing agent"
